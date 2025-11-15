@@ -1,0 +1,49 @@
+// Styles minimaux pour les interactions
+
+// Conteneur du switch - transition de l'outline pour le focus
+.switch-container {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: outline 0.2s ease;
+}
+
+// Couleur du background
+.switch-background {
+    background-color: var(--secondary-3);
+}
+
+// Positionnement et couleur du bouton
+.switch-button {
+    background-color: var(--secondary-0);
+}
+
+// Hover sur le switch (non désactivé)
+input:not(:disabled) + label:hover .switch-background {
+    background-color: var(--secondary-5);
+}
+
+// État coché - couleur primary
+input:checked + label .switch-background {
+    background-color: var(--primary-3);
+}
+
+// État coché + hover
+input:checked:not(:disabled) + label:hover .switch-background {
+    background-color: var(--primary-0);
+}
+
+// État coché - déplacement du bouton
+input:checked + label .switch-button {
+    left: calc(100% - 4px);
+    transform: translateX(-100%);
+}
+
+// Focus clavier visible - bordure autour du switch
+input:focus-visible + label .switch-container {
+    outline-color: var(--secondary-5);
+}
+
+// État coché + focus clavier visible
+input:checked:focus-visible + label .switch-container {
+    outline-color: var(--primary-0);
+}

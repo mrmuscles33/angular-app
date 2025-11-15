@@ -1,0 +1,28 @@
+<button
+    class="
+    relative inline-block px-4 py-2 rounded-lg whitespace-nowrap 
+    select-none outline-none 
+    transition-all duration-200 ease-in-out 
+    focus-visible:ring-2 focus-visible:ring-primary-0 focus-visible:ring-offset-2 
+    {{ class() }}
+ "
+    [class.cursor-not-allowed]="disabled()"
+    [class.cursor-pointer]="!disabled()"
+    [class.opacity-50]="disabled()"
+    [class.bg-primary-3]="primary() && !disabled()"
+    [class.text-white]="primary() && !disabled()"
+    [class.hover:bg-primary-0]="primary() && !disabled()"
+    [class.active:bg-primary-1]="primary() && !disabled()"
+    [class.bg-transparent]="!primary() && !disabled()"
+    [class.text-primary-3]="!primary() && !disabled()"
+    [class.hover:bg-secondary-1]="!primary() && !disabled()"
+    [class.active:bg-secondary-2]="!primary() && !disabled()"
+    [class.border]="!primary() && bordered()"
+    [class.border-secondary-3]="!primary() && bordered()"
+    [disabled]="disabled()"
+    [tabindex]="disabled() ? -1 : 0"
+    type="button"
+    (click)="onClick($event)"
+>
+    <ng-content>{{ text() }}</ng-content>
+</button>

@@ -1,0 +1,26 @@
+// Conteneur de l'icône - assure un positionnement correct et centrage du outline
+.checkbox-icon {
+    transition: outline 0.2s ease;
+    outline: 2px solid transparent;
+    outline-offset: 1px;
+}
+
+// Hover sur l'icône (non désactivé) - utilise la variable CSS du thème
+input:not(:disabled) + label:hover .checkbox-icon amr-icon {
+    color: var(--primary-3);
+}
+
+// État coché + hover
+input:checked:not(:disabled) + label:hover .checkbox-icon amr-icon {
+    color: var(--primary-3);
+}
+
+// Focus clavier visible - bordure visible autour de l'icône (même couleur que l'icône)
+input:focus-visible + label .checkbox-icon {
+    outline-color: var(--primary-3);
+}
+
+// État coché + focus clavier visible
+input:checked:focus-visible + label .checkbox-icon {
+    outline-color: var(--primary-3);
+}

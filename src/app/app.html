@@ -1,0 +1,152 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+    <!-- Header -->
+    <header class="mb-12">
+        <h1 class="text-5xl font-bold text-gray-800 mb-2">UI Angular Components</h1>
+    </header>
+
+    <!-- Controls -->
+    <section class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">Controls</h2>
+
+        <!-- Buttons -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Buttons</h3>
+            <div class="grid grid-cols-4 gap-4">
+                <amr-button text="Primary Button" [primary]="true" class="w-full" (amrClick)="onPrimaryButtonClick()" />
+                <amr-button text="Secondary Button" class="w-full" />
+                <amr-button [bordered]="false" class="w-full">
+                    <div class="flex items-center justify-between gap-2">
+                        <amr-icon name="favorite" size="sm"></amr-icon>
+                        <span>With Icon</span>
+                        <span></span>
+                    </div>
+                </amr-button>
+
+                <amr-button text="Disabled" [disabled]="true" class="w-full" />
+            </div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Checkboxes</h3>
+            <div class="flex flex-col gap-4">
+                <amr-checkbox label="Checkbox non coché" [(checked)]="checkbox1" (checkedChange)="onCheckboxChange($event, 'Checkbox 1')" />
+                <amr-checkbox label="Checkbox coché par défaut" [(checked)]="checkbox2" (checkedChange)="onCheckboxChange($event, 'Checkbox 2')" />
+                <amr-checkbox label="Checkbox désactivé" [disabled]="true" [checked]="false" />
+                <amr-checkbox label="Checkbox désactivé et coché" [disabled]="true" [checked]="true" />
+            </div>
+        </div>
+
+        <!-- Radios -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Radios</h3>
+            <div class="mb-6">
+                <div class="flex flex-col gap-4">
+                    <amr-radio label="Option 1" group="radio-group-1" value="option1" [(selectedValue)]="radioGroup1" (amrChange)="onRadioChange($event, 'Radio Group 1')" />
+                    <amr-radio label="Option 2" group="radio-group-1" value="option2" [(selectedValue)]="radioGroup1" (amrChange)="onRadioChange($event, 'Radio Group 1')" />
+                    <amr-radio label="Option 3" group="radio-group-1" value="option3" [(selectedValue)]="radioGroup1" (amrChange)="onRadioChange($event, 'Radio Group 1')" />
+                    <amr-radio label="Option 4 (désactivé)" group="radio-group-1" value="option4" [disabled]="true" [(selectedValue)]="radioGroup1" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Switches -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Switches</h3>
+            <div class="flex flex-col gap-4">
+                <amr-switch [label]="'Switch ' + (switch1() ? 'activé' : ' désactivé')" [(checked)]="switch1" (amrChange)="onSwitchChange(switch1(), 'Switch 1')" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">Inputs</h2>
+
+        <!-- Text Inputs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Text</h3>
+        </div>
+
+        <!-- Password Inputs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Password</h3>
+        </div>
+
+        <!-- Number Inputs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Number</h3>
+        </div>
+
+        <!-- Phone Inputs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Phone</h3>
+        </div>
+
+        <!-- Email Inputs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Email</h3>
+        </div>
+
+        <!-- Date & Time Inputs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Date & Time</h3>
+        </div>
+
+        <!-- List -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">List</h3>
+        </div>
+    </section>
+
+    <!-- Decorations -->
+    <section class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">Decorations</h2>
+
+        <!-- Avatar -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Avatar</h3>
+        </div>
+
+        <!-- Icons -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Icons</h3>
+            <div class="flex flex-wrap gap-4">
+                <amr-icon name="home"></amr-icon>
+                <amr-icon name="search"></amr-icon>
+                <amr-icon name="settings"></amr-icon>
+                <amr-icon name="favorite" size="sm"></amr-icon>
+                <amr-icon name="favorite" size="md"></amr-icon>
+                <amr-icon name="favorite" size="lg"></amr-icon>
+                <amr-icon name="favorite" size="xl"></amr-icon>
+            </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Badges</h3>
+        </div>
+    </section>
+
+    <!-- Containers -->
+    <section class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">Containers</h2>
+
+        <!-- Cards -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Cards</h3>
+        </div>
+
+        <!-- Alerts -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Alerts</h3>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Tabs</h3>
+        </div>
+    </section>
+</div>
+
+<router-outlet />

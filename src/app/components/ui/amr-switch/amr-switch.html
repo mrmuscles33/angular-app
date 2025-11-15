@@ -1,0 +1,30 @@
+<span class="relative inline-flex items-center">
+    <input
+        type="checkbox"
+        role="switch"
+        aria-label="{{ label() }}"
+        aria-checked="{{ checked() }}"
+        class="absolute opacity-0 w-0 h-0 p-0 m-0"
+        [id]="switchId"
+        [checked]="checked()"
+        [disabled]="disabled()"
+        [tabindex]="disabled() ? -1 : 0"
+        (change)="onChange($event)"
+    />
+    <label
+        [for]="switchId"
+        class="inline-flex items-center m-0 p-0 whitespace-nowrap text-dark-0 select-none"
+        [class.cursor-pointer]="!disabled()"
+        [class.cursor-not-allowed]="disabled()"
+        [class.opacity-50]="disabled()"
+    >
+        <span class="switch-container relative inline-flex items-center justify-center w-12 h-7 rounded-full">
+            <span class="switch-background block w-full h-full relative transition-colors duration-300 rounded-full">
+                <span class="switch-button absolute transition-all duration-300 rounded-full aspect-square h-5 top-1 left-1"></span>
+            </span>
+        </span>
+        @if (label()) {
+        <span class="ml-2">{{ label() }}</span>
+        }
+    </label>
+</span>

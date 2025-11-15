@@ -1,0 +1,23 @@
+<span class="relative inline-flex">
+    <input
+        type="checkbox"
+        class="absolute opacity-0 w-0 h-0 p-0 m-0"
+        [id]="checkboxId"
+        [checked]="checked()"
+        [disabled]="disabled()"
+        [tabindex]="disabled() ? -1 : 0"
+        (change)="onChange($event)"
+    />
+    <label
+        [for]="checkboxId"
+        class="inline-flex items-center m-0 p-0 whitespace-nowrap text-dark-0 select-none"
+        [class.cursor-pointer]="!disabled()"
+        [class.cursor-not-allowed]="disabled()"
+        [class.opacity-50]="disabled()"
+    >
+        <span class="checkbox-icon inline-flex items-center justify-center h-5 w-5 rounded-sm">
+            <amr-icon [name]="checked() ? 'check_box' : 'check_box_outline_blank'" class="text-primary-3 transition-colors duration-200"></amr-icon>
+        </span>
+        <span class="ml-2">{{ label() }}</span>
+    </label>
+</span>

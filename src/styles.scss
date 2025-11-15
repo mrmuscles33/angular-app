@@ -1,0 +1,69 @@
+// Import Tailwind CSS v3
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Variables CSS personnalisées pour les thèmes
+:root {
+    // Couleurs Primary (du tailwind.config.js)
+    --primary-0: #008071;
+    --primary-1: #258073;
+    --primary-2: #378174;
+    --primary-3: #448176;
+    --primary-4: #508178;
+    --primary-5: #5b8179;
+
+    // Couleurs Secondary
+    --secondary-0: #eeeeee;
+    --secondary-1: #dddddd;
+    --secondary-2: #cccccc;
+    --secondary-3: #bbbbbb;
+    --secondary-4: #aaaaaa;
+    --secondary-5: #999999;
+
+    // Couleurs Light
+    --light-0: #ffffff;
+    --light-1: #eeeeee;
+    --light-2: #dddddd;
+    --light-3: #cccccc;
+    --light-4: #bbbbbb;
+    --light-5: #aaaaaa;
+
+    // Couleurs Dark
+    --dark-0: #111111;
+    --dark-1: #222222;
+    --dark-2: #333333;
+    --dark-3: #444444;
+    --dark-4: #555555;
+    --dark-5: #666666;
+
+    // Couleurs de status
+    --status-info: #427bb1;
+    --status-info-light: #5cbad1;
+    --status-info-dark: #1b2e83;
+    --status-success: #008071;
+    --status-success-light: #8cb6ae;
+    --status-success-dark: #00493e;
+    --status-warning: #f39c12;
+    --status-warning-light: #cab99e;
+    --status-warning-dark: #664b00;
+    --status-error: #870b25;
+    --status-error-light: #c58e9a;
+    --status-error-dark: #740926;
+    --status-disabled: #444444;
+    --status-disabled-light: #aaaaaa;
+    --status-disabled-dark: #111111;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-0);
+    background-color: var(--light-1);
+}
