@@ -1,0 +1,59 @@
+<div
+    class="textfield-main relative flex flex-row items-center px-2 gap-x-1 w-full bg-transparent rounded-lg border border-solid box-border text-base transition-all duration-200"
+    [class.h-12]="label()"
+    [class.h-9]="!label()"
+    [class.filled]="filled()"
+    [class.rounded-b-none]="filled()"
+    [class.border-0]="filled()"
+    [class.border-b]="filled()"
+    [class.opacity-50]="disabled()"
+    [class.cursor-not-allowed]="disabled()"
+    [class.cursor-text]="!disabled()"
+    [class]="cls()"
+    (click)="onContainerClick($event)"
+    (keypress)="onContainerClick($event)"
+>
+    <!-- Left slot -->
+    <ng-content select="[slot='left']"></ng-content>
+
+    <!-- Input wrapper -->
+    <span class="flex flex-col flex-1 justify-end">
+        @if (label()) {
+        <label [for]="textId" class="absolute transition-all duration-200 pointer-events-none select-none">
+            {{ label() }}
+        </label>
+        }
+        <input
+            #inputRef
+            placeholder="."
+            [id]="textId"
+            [name]="name()"
+            [type]="_type()"
+            [maxLength]="_maxlength()"
+            [tabindex]="tabindex()"
+            [value]="strValue()"
+            [disabled]="disabled()"
+            [readonly]="readonly()"
+            [required]="required()"
+            [pattern]="_pattern()"
+            class="w-full box-border border-0 outline-none bg-transparent"
+            [class.mt-4]="label()"
+            [class.cursor-not-allowed]="disabled()"
+            (change)="onInputChange($event)"
+            (input)="onInput($event)"
+            (focus)="onFocus($event)"
+            (focusout)="onFocusOut($event)"
+            (blur)="onBlur($event)"
+            (keydown)="onKeyDown($event)"
+            (keyup)="onKeyUp($event)"
+        />
+    </span>
+
+    <!-- Right slot -->
+    <ng-content select="[slot='right']"></ng-content>
+
+    <!-- Error message -->
+    @if (errorMessage()) {
+    <span class="error absolute w-full top-full left-0 translate-y-1 text-xs">{{ errorMessage() }}</span>
+    }
+</div>

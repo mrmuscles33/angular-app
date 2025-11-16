@@ -10,8 +10,14 @@
  * @param blackList - Liste de propriétés à exclure de la comparaison
  * @returns true si les objets sont égaux
  */
-export function areEqual<T extends Record<string, any>>(objA: T, objB: T, whiteList: string[] = [], blackList: string[] = []): boolean {
-    const filterKeys = (keys: string[]) => keys.filter((prop) => !blackList.includes(prop) && (whiteList.length === 0 || whiteList.includes(prop)));
+export function areEqual<T extends Record<string, any>>(
+    objA: T,
+    objB: T,
+    whiteList: string[] = [],
+    blackList: string[] = []
+): boolean {
+    const filterKeys = (keys: string[]) =>
+        keys.filter((prop) => !blackList.includes(prop) && (whiteList.length === 0 || whiteList.includes(prop)));
 
     const keysA = filterKeys(Object.keys(objA));
     const keysB = filterKeys(Object.keys(objB));

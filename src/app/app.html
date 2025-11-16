@@ -12,7 +12,7 @@
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Buttons</h3>
             <div class="grid grid-cols-4 gap-4">
-                <amr-button text="Primary Button" [primary]="true" class="w-full" (amrClick)="onPrimaryButtonClick()" />
+                <amr-button text="Primary Button" [primary]="true" class="w-full" (clicked)="onPrimaryButtonClick()" />
                 <amr-button text="Secondary Button" class="w-full" />
                 <amr-button [bordered]="false" class="w-full">
                     <div class="flex items-center justify-between gap-2">
@@ -30,8 +30,16 @@
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Checkboxes</h3>
             <div class="flex flex-col gap-4">
-                <amr-checkbox label="Checkbox non coché" [(checked)]="checkbox1" (checkedChange)="onCheckboxChange($event, 'Checkbox 1')" />
-                <amr-checkbox label="Checkbox coché par défaut" [(checked)]="checkbox2" (checkedChange)="onCheckboxChange($event, 'Checkbox 2')" />
+                <amr-checkbox
+                    label="Checkbox non coché"
+                    [(checked)]="checkbox1"
+                    (changed)="onCheckboxChange($event, 'Checkbox 1')"
+                />
+                <amr-checkbox
+                    label="Checkbox coché par défaut"
+                    [(checked)]="checkbox2"
+                    (changed)="onCheckboxChange($event, 'Checkbox 2')"
+                />
                 <amr-checkbox label="Checkbox désactivé" [disabled]="true" [checked]="false" />
                 <amr-checkbox label="Checkbox désactivé et coché" [disabled]="true" [checked]="true" />
             </div>
@@ -42,10 +50,28 @@
             <h3 class="text-xl font-medium text-gray-700 mb-4">Radios</h3>
             <div class="mb-6">
                 <div class="flex flex-col gap-4">
-                    <amr-radio label="Option 1" group="radio-group-1" value="option1" [(selectedValue)]="radioGroup1" (amrChange)="onRadioChange($event, 'Radio Group 1')" />
-                    <amr-radio label="Option 2" group="radio-group-1" value="option2" [(selectedValue)]="radioGroup1" (amrChange)="onRadioChange($event, 'Radio Group 1')" />
-                    <amr-radio label="Option 3" group="radio-group-1" value="option3" [(selectedValue)]="radioGroup1" (amrChange)="onRadioChange($event, 'Radio Group 1')" />
-                    <amr-radio label="Option 4 (désactivé)" group="radio-group-1" value="option4" [disabled]="true" [(selectedValue)]="radioGroup1" />
+                    <amr-radio
+                        label="Option 1"
+                        group="radio-group-1"
+                        value="option1"
+                        [(selectedValue)]="radioGroup1"
+                        (changed)="onRadioChange($event, 'Radio Group 1')"
+                    />
+                    <amr-radio
+                        label="Option 2"
+                        group="radio-group-1"
+                        value="option2"
+                        [(selectedValue)]="radioGroup1"
+                        (changed)="onRadioChange($event, 'Radio Group 1')"
+                    />
+                    <amr-radio
+                        label="Option 3"
+                        group="radio-group-1"
+                        value="option3"
+                        [(selectedValue)]="radioGroup1"
+                        (changed)="onRadioChange($event, 'Radio Group 1')"
+                    />
+                    <amr-radio label="Option 4 (désactivé)" group="radio-group-1" value="option4" [disabled]="true" />
                 </div>
             </div>
         </div>
@@ -54,7 +80,11 @@
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Switches</h3>
             <div class="flex flex-col gap-4">
-                <amr-switch [label]="'Switch ' + (switch1() ? 'activé' : ' désactivé')" [(checked)]="switch1" (amrChange)="onSwitchChange(switch1(), 'Switch 1')" />
+                <amr-switch
+                    [label]="'Switch ' + (switch1() ? 'activé' : ' désactivé')"
+                    [(checked)]="switch1"
+                    (changed)="onSwitchChange($event, 'Switch 1')"
+                />
             </div>
         </div>
     </section>
@@ -66,26 +96,40 @@
         <!-- Text Inputs -->
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Text</h3>
+            <div class="flex flex-row gap-2 w-full items-center">
+                <amr-text label="Text Input" class="flex-1">
+                    <ng-container slot="left">
+                        <amr-icon name="search" />
+                    </ng-container>
+                </amr-text>
+                <amr-text label="Disabled Text Input" [disabled]="true" class="flex-1" />
+                <amr-text label="Required Text Input" [required]="true" class="flex-1" />
+                <amr-text class="flex-1" [filled]="false" value="Without Label" />
+            </div>
         </div>
 
         <!-- Password Inputs -->
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Password</h3>
+            <amr-password label="Password Input" />
         </div>
 
         <!-- Number Inputs -->
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Number</h3>
+            <amr-number label="Number Input" [value]="123.45" [min]="10" />
         </div>
 
         <!-- Phone Inputs -->
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Phone</h3>
+            <amr-phone label="Phone Input" />
         </div>
 
         <!-- Email Inputs -->
         <div class="mb-8">
             <h3 class="text-xl font-medium text-gray-700 mb-4">Email</h3>
+            <amr-email label="Email Input" />
         </div>
 
         <!-- Date & Time Inputs -->

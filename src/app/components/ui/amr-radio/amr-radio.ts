@@ -24,7 +24,7 @@ export class AmrRadio {
     selectedValue = model<string>(''); // Valeur sélectionnée dans le groupe
 
     // Outputs
-    amrChange = output<Event>();
+    changed = output<Event>();
 
     // ID unique généré une seule fois à la construction
     protected readonly radioId = `radio-${randomString()}`;
@@ -43,6 +43,6 @@ export class AmrRadio {
         if (target.checked) {
             this.selectedValue.set(this.value());
         }
-        this.amrChange.emit(event);
+        this.changed.emit(event);
     }
 }

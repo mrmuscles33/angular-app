@@ -16,7 +16,10 @@
         [class.opacity-50]="disabled()"
     >
         <span class="checkbox-icon inline-flex items-center justify-center h-5 w-5 rounded-sm">
-            <amr-icon [name]="checked() ? 'check_box' : 'check_box_outline_blank'" class="text-primary-3 transition-colors duration-200"></amr-icon>
+            <amr-icon
+                [name]="checked() ? 'check_box' : 'check_box_outline_blank'"
+                class="text-primary-3 transition-colors duration-200"
+            ></amr-icon>
         </span>
         <span class="ml-2">{{ label() }}</span>
     </label>

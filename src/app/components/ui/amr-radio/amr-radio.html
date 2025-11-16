@@ -18,7 +18,10 @@
         [class.opacity-50]="disabled()"
     >
         <span class="radio-icon inline-flex items-center justify-center h-5 w-5 rounded-full">
-            <amr-icon [name]="isChecked ? 'radio_button_checked' : 'radio_button_unchecked'" class="text-primary-3 transition-colors duration-200"></amr-icon>
+            <amr-icon
+                [name]="isChecked ? 'radio_button_checked' : 'radio_button_unchecked'"
+                class="text-primary-3 transition-colors duration-200"
+            ></amr-icon>
         </span>
         <span class="ml-2">{{ label() }}</span>
     </label>

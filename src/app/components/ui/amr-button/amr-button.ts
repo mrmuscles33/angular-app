@@ -17,12 +17,12 @@ export class AmrButton {
     disabled = input<boolean>(false);
 
     // Outputs
-    amrClick = output<Event>();
+    clicked = output<Event>();
 
     onClick(event: Event) {
         if (this.disabled()) {
             return;
         }
-        this.amrClick.emit(event);
+        this.clicked.emit(event);
     }
 }

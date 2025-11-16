@@ -1,0 +1,68 @@
+.textfield-main {
+    border-color: var(--secondary-5);
+    &.filled {
+        background-color: var(--secondary-2);
+        border-color: var(--secondary-5);
+        &:hover {
+            background-color: var(--secondary-3);
+        }
+        &:focus-within {
+            border-bottom-width: 2px;
+            border-color: var(--primary-5);
+        }
+    }
+    &:not(.filled) {
+        &:hover {
+            border-width: 2px;
+        }
+        &:focus-within {
+            border-width: 2px;
+            border-color: var(--primary-5);
+        }
+    }
+    &:has(span.error) {
+        border-color: var(--status-error) !important;
+    }
+    > span > input {
+        -moz-appearance: textfield;
+        appearance: textfield;
+        color: var(--dark-2);
+        font-size: var(--size-2);
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        &::placeholder {
+            opacity: 0;
+        }
+    }
+    > span > label {
+        color: var(--dark-0);
+        top: 50%;
+        transform: translateY(-50%);
+        &:has(+ input:required)::after {
+            content: '*';
+            color: var(--status-error);
+        }
+    }
+    &:focus-within > span > label {
+        color: var(--primary-5);
+    }
+    &:focus-within > span > label,
+    &:has(span > input:not(:placeholder-shown)) > span > label {
+        top: 0px;
+        transform: translateY(0);
+        font-size: 80%;
+        font-weight: 500;
+    }
+    &:has(span.error) *,
+    &:has(span.error) > span > label {
+        color: var(--status-error);
+    }
+    &:has(span.error) > span > input {
+        color: var(--dark-2);
+    }
+    .error {
+        color: var(--status-error);
+    }
+}

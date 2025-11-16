@@ -2,7 +2,7 @@
  * Utilitaires pour la manipulation de tableaux
  */
 
-import { toDate, before, after, equals } from './date.utils';
+import { textToDate, dateBefore, dateAfter, dateEquals } from './date.utils';
 
 export type SortDirection = 'asc' | 'desc';
 export type FilterType = 'equals' | 'before' | 'after' | 'between' | 'contains' | 'starts' | 'ends' | 'in';
@@ -25,17 +25,22 @@ export interface ArrayFilter<T = any> {
  * @param dateFormat - Format de date si la propriété est une date (ex: 'dd/MM/yyyy')
  * @returns Le tableau trié (modifie le tableau original)
  */
-export function sortArray<T>(array: T[], property?: keyof T, direction: SortDirection = 'asc', dateFormat?: string): T[] {
+export function sortArray<T>(
+    array: T[],
+    property?: keyof T,
+    direction: SortDirection = 'asc',
+    dateFormat?: string
+): T[] {
     return array.sort((a, b) => {
         const valueA = property ? (a[property] ?? '') : a;
         const valueB = property ? (b[property] ?? '') : b; // Tri sur dates
         if (dateFormat && typeof valueA === 'string' && typeof valueB === 'string') {
-            const dateA = toDate(valueA, dateFormat);
-            const dateB = toDate(valueB, dateFormat);
+            const dateA = textToDate(valueA, dateFormat);
+            const dateB = textToDate(valueB, dateFormat);
 
             if (!dateA || !dateB) return 0;
-            if (equals(dateA, dateB)) return 0;
-            const comparison = before(dateA, dateB) ? -1 : 1;
+            if (dateEquals(dateA, dateB)) return 0;
+            const comparison = dateBefore(dateA, dateB) ? -1 : 1;
             return direction === 'asc' ? comparison : -comparison;
         }
 
@@ -59,37 +64,40 @@ export function filterArray<T>(array: T[], filters: ArrayFilter<T>[] = []): T[] 
             switch (filter.type) {
                 case 'equals':
                     if (filter.dateType === 'date' && filter.format && typeof itemValue === 'string') {
-                        const date1 = toDate(itemValue, filter.format);
-                        const date2 = toDate(filter.value, filter.format);
+                        const date1 = textToDate(itemValue, filter.format);
+                        const date2 = textToDate(filter.value, filter.format);
                         if (!date1 || !date2) return false;
-                        return equals(date1, date2);
+                        return dateEquals(date1, date2);
                     }
                     return itemValue === filter.value;
                 case 'before':
                     if (filter.dateType === 'date' && filter.format && typeof itemValue === 'string') {
-                        const date1 = toDate(itemValue, filter.format);
-                        const date2 = toDate(filter.value, filter.format);
+                        const date1 = textToDate(itemValue, filter.format);
+                        const date2 = textToDate(filter.value, filter.format);
                         if (!date1 || !date2) return false;
-                        return before(date1, date2);
+                        return dateBefore(date1, date2);
                     }
                     return itemValue < filter.value;
 
                 case 'after':
                     if (filter.dateType === 'date' && filter.format && typeof itemValue === 'string') {
-                        const date1 = toDate(itemValue, filter.format);
-                        const date2 = toDate(filter.value, filter.format);
+                        const date1 = textToDate(itemValue, filter.format);
+                        const date2 = textToDate(filter.value, filter.format);
                         if (!date1 || !date2) return false;
-                        return after(date1, date2);
+                        return dateAfter(date1, date2);
                     }
                     return itemValue > filter.value;
 
                 case 'between':
                     if (filter.dateType === 'date' && filter.format && typeof itemValue === 'string') {
-                        const date = toDate(itemValue, filter.format);
-                        const min = toDate(filter.min, filter.format);
-                        const max = toDate(filter.max, filter.format);
+                        const date = textToDate(itemValue, filter.format);
+                        const min = textToDate(filter.min, filter.format);
+                        const max = textToDate(filter.max, filter.format);
                         if (!date || !min || !max) return false;
-                        return (after(date, min) || equals(date, min)) && (before(date, max) || equals(date, max));
+                        return (
+                            (dateAfter(date, min) || dateEquals(date, min)) &&
+                            (dateBefore(date, max) || dateEquals(date, max))
+                        );
                     }
                     return itemValue >= filter.min && itemValue <= filter.max;
 

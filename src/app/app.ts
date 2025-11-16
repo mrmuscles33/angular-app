@@ -5,10 +5,27 @@ import { AmrIcon } from './components/ui/amr-icon/amr-icon';
 import { AmrCheckbox } from './components/ui/amr-checkbox/amr-checkbox';
 import { AmrRadio } from './components/ui/amr-radio/amr-radio';
 import { AmrSwitch } from './components/ui/amr-switch/amr-switch';
+import { AmrText } from './components/ui/amr-text/amr-text';
+import { AmrPassword } from './components/ui/amr-password/amr-password';
+import { AmrNumber } from './components/ui/amr-number/amr-number';
+import { AmrEmail } from './components/ui/amr-email/amr-email';
+import { AmrPhone } from './components/ui/amr-phone/amr-phone';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, AmrButton, AmrIcon, AmrCheckbox, AmrRadio, AmrSwitch],
+    imports: [
+        RouterOutlet,
+        AmrButton,
+        AmrIcon,
+        AmrCheckbox,
+        AmrRadio,
+        AmrSwitch,
+        AmrText,
+        AmrPassword,
+        AmrNumber,
+        AmrEmail,
+        AmrPhone,
+    ],
     templateUrl: './app.html',
     styleUrl: './app.scss',
 })
@@ -31,15 +48,18 @@ export class App {
         alert('Clicked !');
     }
 
-    onCheckboxChange(checked: boolean, label: string) {
+    onCheckboxChange(event: Event, label: string) {
+        const checked = (event.target as HTMLInputElement).checked;
         console.log(`${label} is now: ${checked}`);
     }
 
     onRadioChange(event: Event, label: string) {
-        console.log(`${label} changed, selected value:`, event);
+        const selectedValue = (event.target as HTMLInputElement).value;
+        console.log(`${label} changed, selected value:`, selectedValue);
     }
 
-    onSwitchChange(checked: boolean, label: string) {
+    onSwitchChange(event: Event, label: string) {
+        const checked = (event.target as HTMLInputElement).checked;
         console.log(`${label} is now: ${checked}`);
     }
 }

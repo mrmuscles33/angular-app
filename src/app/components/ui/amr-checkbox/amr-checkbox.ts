@@ -22,7 +22,7 @@ export class AmrCheckbox {
     checked = model<boolean>(false);
 
     // Outputs
-    amrChange = output<Event>();
+    changed = output<Event>();
 
     // ID unique généré une seule fois à la construction
     protected readonly checkboxId = `checkbox-${randomString()}`;
@@ -34,6 +34,6 @@ export class AmrCheckbox {
         }
         const target = event.target as HTMLInputElement;
         this.checked.set(target.checked);
-        this.amrChange.emit(event);
+        this.changed.emit(event);
     }
 }
