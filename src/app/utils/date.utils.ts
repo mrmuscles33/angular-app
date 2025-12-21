@@ -70,7 +70,9 @@ export const MonthNames = [
  * @returns Date d'aujourd'hui
  */
 export function today(): Date {
-    return new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
 }
 
 /**
@@ -414,15 +416,6 @@ export function isLeapYear(year: number): boolean {
  */
 export function daysInMonth(date: Date): number {
     return lastDayOfMonth(date).getDate();
-}
-
-/**
- * Vérifie si une date est aujourd'hui
- * @param date - Date à vérifier
- * @returns true si aujourd'hui
- */
-export function isToday(date: Date): boolean {
-    return dateEquals(date, today());
 }
 
 /**

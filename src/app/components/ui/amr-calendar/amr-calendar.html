@@ -1,13 +1,8 @@
-<div class="calendar-main flex flex-col gap-1" [class.readonly]="readonly()" [class]="cls()">
+<div class="calendar-main flex flex-col gap-1" [class.readonly]="readonly()" [class]="cls()" #calendarMain>
     <!-- Header avec navigation -->
     <div class="flex items-center gap-1">
         @if (!readonly()) {
-        <amr-button
-            [bordered]="false"
-            [disabled]="isPreviousDisabled()"
-            (click)="onClickPrevious()"
-            (keydown)="onClickPrevious()"
-        >
+        <amr-button [bordered]="false" [disabled]="isPreviousDisabled()" (click)="onClickPrevious()">
             <amr-icon slot="content" name="keyboard_arrow_left" size="lg" />
         </amr-button>
         }
@@ -19,13 +14,12 @@
             [bordered]="false"
             [disabled]="readonly()"
             (click)="onClickYearButton()"
-            (keydown)="onClickYearButton()"
         />
 
         <span class="flex-1"></span>
 
         @if (!readonly()) {
-        <amr-button [bordered]="false" [disabled]="isNextDisabled()" (click)="onClickNext()" (keydown)="onClickNext()">
+        <amr-button [bordered]="false" [disabled]="isNextDisabled()" (click)="onClickNext()">
             <amr-icon slot="content" name="keyboard_arrow_right" size="lg" />
         </amr-button>
         }
@@ -36,10 +30,12 @@
     <div class="calendar-years aspect-square grid grid-cols-3 grid-rows-7 items-center justify-items-center">
         @for (year of displayedYears(); track year) {
         <button
-            class="calendar-year rounded-lg w-full h-full flex items-center justify-center cursor-pointer select-none"
-            [class.today]="isYearToday(year)"
+            class="calendar-year rounded-full w-full h-full cursor-pointer select-none border-solid hover:bg-secondary-1"
+            [class.border-2]="isYearSelected(year)"
+            [class.text-primary-0]="isYearSelected(year)"
+            [class.bg-secondary-0]="isYearToday(year)"
             [class.selected]="isYearSelected(year)"
-            [tabindex]="getYearTabIndex(year)"
+            [tabindex]="!readonly() && isYearSelected(year) ? 0 : -1"
             (click)="onClickYear(year)"
             (keydown)="onKeyDownYear($event, year)"
         >
@@ -51,21 +47,25 @@
 
     <!-- Vue des jours -->
     @if (!showYear()) {
-    <div class="calendar-days grid grid-cols-7 grid-rows-7 items-center justify-items-center">
+    <div class="calendar-days grid grid-cols-7 grid-rows-7 items-center justify-items-center auto-rows-auto">
         <!-- En-têtes des jours de la semaine -->
         @for (day of sortedDays(); track day) {
-        <span class="calendar-day header font-medium text-sm">{{ day.substring(0, 3) }}.</span>
+        <span class="calendar-day header">{{ day.substring(0, 3) }}.</span>
         }
 
         <!-- Jours du mois -->
         @for (day of displayedDays(); track day) {
         <button
-            class="calendar-day rounded-lg w-full h-full flex items-center justify-center cursor-pointer select-none"
-            [class.today]="isDayToday(day)"
-            [class.selected]="isDaySelected(day)"
-            [class.other-month]="!isDayInCurrentMonth(day)"
-            [class.disabled]="isDayDisabled(day)"
-            [tabindex]="getDayTabIndex(day)"
+            class="calendar-day rounded-full w-full aspect-square select-none hover:bg-secondary-1 focus:bg-secondary-1"
+            [class]="[
+                isDaySelected(day) ? 'border-2 border-primary-0 border-solid text-primary-0' : '',
+                isDayDisabled(day) ? 'cursor-not-allowed' : 'cursor-pointer'
+            ].join(' ')"
+            [class.bg-secondary-0]="isDayToday(day)"
+            [class.text-secondary-4]="!isDayInCurrentMonth(day) || isDayDisabled(day)"
+            [tabindex]="!readonly() && isDayFocused(day) ? 0 : -1"
+            [attr.selected]="isDaySelected(day) ? true : null"
+            [value]="dateToText(day)"
             (click)="onClickDay($event, day)"
             (keydown)="onKeyDownDay($event, day)"
         >

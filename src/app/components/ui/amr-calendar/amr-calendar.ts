@@ -1,20 +1,31 @@
-import { Component, computed, input, model, output, signal } from '@angular/core';
-import { AmrButton } from '../amr-button/amr-button';
-import { AmrIcon } from '../amr-icon/amr-icon';
+import {
+    Component,
+    computed,
+    effect,
+    ElementRef,
+    input,
+    model,
+    output,
+    signal,
+    untracked,
+    viewChild,
+} from '@angular/core';
 import * as DateUtils from '@app/utils/date.utils';
 import * as KeyboardUtils from '@app/utils/keyboard.utils';
+import { AmrButton } from '../amr-button/amr-button';
+import { AmrIcon } from '../amr-icon/amr-icon';
 
 @Component({
     selector: 'amr-calendar',
     templateUrl: './amr-calendar.html',
-    styleUrl: './amr-calendar.scss',
     imports: [AmrButton, AmrIcon],
     host: {
-        '[class]': 'cls()',
         class: 'block',
     },
 })
 export class AmrCalendar {
+    calendarMain = viewChild.required<ElementRef<HTMLElement>>('calendarMain');
+
     // Inputs
     format = input<string>(DateUtils.DateFormats.D_M_Y);
     startWeek = input<number>(DateUtils.Days.MONDAY);
@@ -28,11 +39,11 @@ export class AmrCalendar {
     dateValue = computed<Date>(() => DateUtils.textToDate(this.value(), this.format()) || DateUtils.today());
 
     // Outputs
-    valueChanged = output<string>();
+    selectValue = output<string>();
 
     // Signals internes
-    focusedDate = signal<string>(this.value());
     focusedYear = signal<number>(this.dateValue().getFullYear());
+    focusedDay = signal<Date>(this.dateValue());
     currentMonth = signal<string>(DateUtils.dateToText(this.dateValue(), DateUtils.DateFormats.M_Y));
     yearsPage = signal<number>(0);
     showYear = signal<boolean>(false);
@@ -120,16 +131,24 @@ export class AmrCalendar {
         return this.displayedDays().some((d) => DateUtils.dateEquals(d, this.maxDate()));
     });
 
+    constructor() {
+        effect(() => {
+            // Date à focus
+            const focused = this.displayedDays().some((day) => DateUtils.dateEquals(day, this.dateValue()))
+                ? this.dateValue()
+                : this.displayedDays()[0];
+            untracked(() => {
+                this.focusedDay.set(focused);
+            });
+        });
+    }
+
     // Méthodes
     onClickYearButton(): void {
         this.showYear.set(!this.showYear());
-
         // Trouver la page de l'année actuelle
-        const focusedDate = DateUtils.textToDate(this.focusedDate(), this.format());
-        if (focusedDate) {
-            const page = Math.floor((focusedDate.getFullYear() - this.minDate().getFullYear()) / 21);
-            this.yearsPage.set(page);
-        }
+        const page = Math.floor((this.dateValue().getFullYear() - this.minDate().getFullYear()) / 21);
+        this.yearsPage.set(page);
     }
 
     onClickPrevious(): void {
@@ -143,7 +162,6 @@ export class AmrCalendar {
             if (monthDate) {
                 const prevMonth = DateUtils.addMonths(monthDate, -1);
                 this.currentMonth.set(DateUtils.dateToText(prevMonth, DateUtils.DateFormats.M_Y));
-                this.focusedDate.set(DateUtils.dateToText(prevMonth, this.format()));
             }
         }
     }
@@ -161,20 +179,17 @@ export class AmrCalendar {
             if (monthDate) {
                 const nextMonth = DateUtils.addMonths(monthDate, 1);
                 this.currentMonth.set(DateUtils.dateToText(nextMonth, DateUtils.DateFormats.M_Y));
-                this.focusedDate.set(DateUtils.dateToText(nextMonth, this.format()));
             }
         }
     }
 
     onClickDay(event: Event, day: Date): void {
         if (this.readonly()) return;
-
         if (day < this.minDate() || day > this.maxDate()) return;
 
         const newValue = DateUtils.dateToText(day, this.format());
         this.value.set(newValue);
-        this.focusedDate.set(newValue);
-        this.valueChanged.emit(newValue);
+        this.selectValue.emit(newValue);
     }
 
     onClickYear(year: number): void {
@@ -185,7 +200,6 @@ export class AmrCalendar {
             currentDate.setFullYear(year);
             const newValue = DateUtils.dateToText(currentDate, this.format());
             this.value.set(newValue);
-            this.focusedDate.set(newValue);
             this.currentMonth.set(DateUtils.dateToText(currentDate, DateUtils.DateFormats.M_Y));
         }
 
@@ -194,7 +208,6 @@ export class AmrCalendar {
 
     onKeyDownDay(event: KeyboardEvent, day: Date): void {
         let nextDate: Date | null = null;
-
         if (KeyboardUtils.isArrow(event)) {
             if (KeyboardUtils.isArrowRight(event)) {
                 nextDate = DateUtils.addDays(day, 1);
@@ -205,20 +218,30 @@ export class AmrCalendar {
             } else if (KeyboardUtils.isArrowUp(event)) {
                 nextDate = DateUtils.addDays(day, -7);
             }
-
             if (nextDate && nextDate >= this.minDate() && nextDate <= this.maxDate()) {
-                this.focusedDate.set(DateUtils.dateToText(nextDate, this.format()));
-
                 // Changer de mois si nécessaire
                 const currentMonthDate = DateUtils.textToDate(this.currentMonth(), DateUtils.DateFormats.M_Y);
                 if (currentMonthDate && nextDate.getMonth() !== currentMonthDate.getMonth()) {
                     this.currentMonth.set(DateUtils.dateToText(nextDate, DateUtils.DateFormats.M_Y));
+                    setTimeout(() => {
+                        this.focusedDay.set(nextDate!);
+                        this.calendarMain()
+                            ?.nativeElement?.querySelector<HTMLElement>(
+                                `.calendar-day[value="${this.dateToText(nextDate!)}"]`
+                            )
+                            ?.focus();
+                    }, 100);
+                } else {
+                    setTimeout(() => {
+                        this.focusedDay.set(nextDate!);
+                        this.calendarMain()
+                            ?.nativeElement?.querySelector<HTMLElement>(
+                                `.calendar-day[value="${this.dateToText(nextDate!)}"]`
+                            )
+                            ?.focus();
+                    }, 0);
                 }
             }
-
-            KeyboardUtils.stopEvent(event);
-        } else if (KeyboardUtils.isEnter(event) || KeyboardUtils.isSpace(event)) {
-            this.onClickDay(event, day);
             KeyboardUtils.stopEvent(event);
         }
     }
@@ -263,16 +286,15 @@ export class AmrCalendar {
     }
 
     isDayToday(day: Date): boolean {
-        return DateUtils.isToday(day);
+        return DateUtils.dateEquals(day, DateUtils.today());
     }
 
     isDaySelected(day: Date): boolean {
-        return DateUtils.dateEquals(day, DateUtils.textToDate(this.value(), this.format()) || new Date());
+        return DateUtils.dateEquals(day, this.dateValue());
     }
 
     isDayFocused(day: Date): boolean {
-        const focusedDateObj = DateUtils.textToDate(this.focusedDate(), this.format());
-        return focusedDateObj ? DateUtils.dateEquals(day, focusedDateObj) : false;
+        return DateUtils.dateEquals(day, this.focusedDay());
     }
 
     isYearToday(year: number): boolean {
@@ -280,36 +302,10 @@ export class AmrCalendar {
     }
 
     isYearSelected(year: number): boolean {
-        const selectedDate = DateUtils.textToDate(this.value(), this.format());
-        return selectedDate ? year === selectedDate.getFullYear() : false;
+        return year === this.dateValue().getFullYear();
     }
 
-    isYearFocused(year: number): boolean {
-        return year === this.focusedYear();
-    }
-
-    getDayTabIndex(day: Date): number {
-        if (this.readonly()) return -1;
-
-        const focusedDateObj = DateUtils.textToDate(this.focusedDate(), this.format());
-
-        if (focusedDateObj && this.displayedDays().some((d) => DateUtils.dateEquals(d, focusedDateObj))) {
-            return DateUtils.dateEquals(day, focusedDateObj) ? 0 : -1;
-        }
-
-        // Si la date focusée n'est pas dans le mois, focus sur le premier jour valide
-        const firstValidDay = this.displayedDays().find((d) => d >= this.minDate() && d <= this.maxDate());
-
-        return firstValidDay && DateUtils.dateEquals(day, firstValidDay) ? 0 : -1;
-    }
-
-    getYearTabIndex(year: number): number {
-        if (this.readonly()) return -1;
-
-        if (this.displayedYears().includes(this.focusedYear())) {
-            return year === this.focusedYear() ? 0 : -1;
-        }
-
-        return year === this.displayedYears()[0] ? 0 : -1;
+    dateToText(date: Date) {
+        return DateUtils.dateToText(date, this.format());
     }
 }
