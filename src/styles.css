@@ -1,0 +1,104 @@
+/* Import Tailwind CSS v4 */
+@import 'tailwindcss';
+
+/* Variables CSS personnalisées pour les thèmes */
+:root {
+    /* Couleurs Primary */
+    --primary-0: #008071;
+    --primary-1: #258073;
+    --primary-2: #378174;
+    --primary-3: #448176;
+    --primary-4: #508178;
+    --primary-5: #5b8179;
+
+    /* Couleurs Secondary */
+    --secondary-0: #eeeeee;
+    --secondary-1: #dddddd;
+    --secondary-2: #cccccc;
+    --secondary-3: #bbbbbb;
+    --secondary-4: #aaaaaa;
+    --secondary-5: #999999;
+
+    /* Couleurs Light */
+    --light-0: #ffffff;
+    --light-1: #eeeeee;
+    --light-2: #dddddd;
+    --light-3: #cccccc;
+    --light-4: #bbbbbb;
+    --light-5: #aaaaaa;
+
+    /* Couleurs Dark */
+    --dark-0: #111111;
+    --dark-1: #222222;
+    --dark-2: #333333;
+    --dark-3: #444444;
+    --dark-4: #555555;
+    --dark-5: #666666;
+
+    /* Couleurs de status */
+    --status-info: #427bb1;
+    --status-info-light: #5cbad1;
+    --status-info-dark: #1b2e83;
+    --status-success: #008071;
+    --status-success-light: #8cb6ae;
+    --status-success-dark: #00493e;
+    --status-warning: #f39c12;
+    --status-warning-light: #cab99e;
+    --status-warning-dark: #664b00;
+    --status-error: #870b25;
+    --status-error-light: #c58e9a;
+    --status-error-dark: #740926;
+    --status-disabled: #444444;
+    --status-disabled-light: #aaaaaa;
+    --status-disabled-dark: #111111;
+}
+
+@theme inline {
+    /* Couleurs Primary */
+    --color-primary-0: var(--primary-0);
+    --color-primary-1: var(--primary-1);
+    --color-primary-2: var(--primary-2);
+    --color-primary-3: var(--primary-3);
+    --color-primary-4: var(--primary-4);
+    --color-primary-5: var(--primary-5);
+
+    /* Couleurs Secondary */
+    --color-secondary-0: var(--secondary-0);
+    --color-secondary-1: var(--secondary-1);
+    --color-secondary-2: var(--secondary-2);
+    --color-secondary-3: var(--secondary-3);
+    --color-secondary-4: var(--secondary-4);
+    --color-secondary-5: var(--secondary-5);
+
+    /* Couleurs Light */
+    --color-light-0: var(--light-0);
+    --color-light-1: var(--light-1);
+    --color-light-2: var(--light-2);
+    --color-light-3: var(--light-3);
+    --color-light-4: var(--light-4);
+    --color-light-5: var(--light-5);
+
+    /* Couleurs Dark */
+    --color-dark-0: var(--dark-0);
+    --color-dark-1: var(--dark-1);
+    --color-dark-2: var(--dark-2);
+    --color-dark-3: var(--dark-3);
+    --color-dark-4: var(--dark-4);
+    --color-dark-5: var(--dark-5);
+
+    /* Couleurs de status */
+    --color-status-info: var(--status-info);
+    --color-status-info-light: var(--status-info-light);
+    --color-status-info-dark: var(--status-info-dark);
+    --color-status-success: var(--status-success);
+    --color-status-success-light: var(--status-success-light);
+    --color-status-success-dark: var(--status-success-dark);
+    --color-status-warning: var(--status-warning);
+    --color-status-warning-light: var(--status-warning-light);
+    --color-status-error: var(--status-error);
+    --color-status-error-light: var(--status-error-light);
+    --color-status-error-dark: var(--status-error-dark);
+    --color-status-disabled: var(--status-disabled);
+    --color-status-disabled-light: var(--status-disabled-light);
+    --color-status-disabled-dark: var(--status-disabled-dark);
+}

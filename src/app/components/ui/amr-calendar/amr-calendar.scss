@@ -9,23 +9,23 @@
 
     .calendar-day,
     .calendar-year {
-        @apply font-medium text-base transition-all duration-200;
+        // @apply font-medium text-base transition-all duration-200;
         color: var(--dark-shade0);
         border: 2px solid transparent;
 
         &:not(.header):hover {
-            @apply bg-opacity-10;
+            // @apply bg-opacity-10;
             background-color: var(--secondary-shade2);
         }
 
         &:not(.header):focus-visible {
-            @apply outline-none;
+            // @apply outline-none;
             background-color: var(--secondary-shade2);
             border-color: var(--secondary-shade3);
         }
 
         &.header {
-            @apply cursor-default pointer-events-none;
+            // @apply cursor-default pointer-events-none;
             color: var(--secondary-shade4);
         }
 
@@ -48,7 +48,7 @@
         }
 
         &.disabled {
-            @apply cursor-not-allowed;
+            // @apply cursor-not-allowed;
             color: var(--secondary-shade4);
             opacity: 0.5;
         }
