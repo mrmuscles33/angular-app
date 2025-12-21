@@ -10,6 +10,7 @@ import { AmrPassword } from './components/ui/amr-password/amr-password';
 import { AmrNumber } from './components/ui/amr-number/amr-number';
 import { AmrEmail } from './components/ui/amr-email/amr-email';
 import { AmrPhone } from './components/ui/amr-phone/amr-phone';
+import { AmrCalendar } from './components/ui/amr-calendar/amr-calendar';
 
 @Component({
     selector: 'app-root',
@@ -25,6 +26,7 @@ import { AmrPhone } from './components/ui/amr-phone/amr-phone';
         AmrNumber,
         AmrEmail,
         AmrPhone,
+        AmrCalendar,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',

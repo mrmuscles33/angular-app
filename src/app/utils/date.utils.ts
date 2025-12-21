@@ -209,17 +209,6 @@ export function textToDate(dateStr: string, dateFormat: string): Date | undefine
     if (!dateStr || !dateFormat) return undefined;
 
     const format = dateFormat.toUpperCase();
-    const regexp = format
-        .replaceAll('DD', String.raw`([0-2]\d|3[01])`)
-        .replaceAll('MM', String.raw`(0\d|1[0-2])`)
-        .replaceAll('YYYY', String.raw`(\d{4})`)
-        .replaceAll('/', String.raw`\/`)
-        .replaceAll('.', String.raw`\.`)
-        .replaceAll('-', String.raw`\-`);
-
-    const match = new RegExp(`^${regexp}$`).exec(dateStr);
-    if (!match) return undefined;
-
     const yearIndex = format.indexOf('YYYY');
     const monthIndex = format.indexOf('MM');
     const dayIndex = format.indexOf('DD');

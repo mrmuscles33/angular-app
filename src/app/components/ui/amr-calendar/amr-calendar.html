@@ -1,0 +1,77 @@
+<div class="calendar-main flex flex-col gap-1" [class.readonly]="readonly()" [class]="cls()">
+    <!-- Header avec navigation -->
+    <div class="flex items-center gap-1">
+        @if (!readonly()) {
+        <amr-button
+            [bordered]="false"
+            [disabled]="isPreviousDisabled()"
+            (click)="onClickPrevious()"
+            (keydown)="onClickPrevious()"
+        >
+            <amr-icon slot="content" name="keyboard_arrow_left" size="lg" />
+        </amr-button>
+        }
+
+        <span class="flex-1"></span>
+
+        <amr-button
+            [text]="displayedMonth()"
+            [bordered]="false"
+            [disabled]="readonly()"
+            (click)="onClickYearButton()"
+            (keydown)="onClickYearButton()"
+        />
+
+        <span class="flex-1"></span>
+
+        @if (!readonly()) {
+        <amr-button [bordered]="false" [disabled]="isNextDisabled()" (click)="onClickNext()" (keydown)="onClickNext()">
+            <amr-icon slot="content" name="keyboard_arrow_right" size="lg" />
+        </amr-button>
+        }
+    </div>
+
+    <!-- Vue des années -->
+    @if (showYear()) {
+    <div class="calendar-years aspect-square grid grid-cols-3 grid-rows-7 items-center justify-items-center">
+        @for (year of displayedYears(); track year) {
+        <button
+            class="calendar-year rounded-lg w-full h-full flex items-center justify-center cursor-pointer select-none"
+            [class.today]="isYearToday(year)"
+            [class.selected]="isYearSelected(year)"
+            [tabindex]="getYearTabIndex(year)"
+            (click)="onClickYear(year)"
+            (keydown)="onKeyDownYear($event, year)"
+        >
+            {{ year }}
+        </button>
+        }
+    </div>
+    }
+
+    <!-- Vue des jours -->
+    @if (!showYear()) {
+    <div class="calendar-days grid grid-cols-7 grid-rows-7 items-center justify-items-center">
+        <!-- En-têtes des jours de la semaine -->
+        @for (day of sortedDays(); track day) {
+        <span class="calendar-day header font-medium text-sm">{{ day.substring(0, 3) }}.</span>
+        }
+
+        <!-- Jours du mois -->
+        @for (day of displayedDays(); track day) {
+        <button
+            class="calendar-day rounded-lg w-full h-full flex items-center justify-center cursor-pointer select-none"
+            [class.today]="isDayToday(day)"
+            [class.selected]="isDaySelected(day)"
+            [class.other-month]="!isDayInCurrentMonth(day)"
+            [class.disabled]="isDayDisabled(day)"
+            [tabindex]="getDayTabIndex(day)"
+            (click)="onClickDay($event, day)"
+            (keydown)="onKeyDownDay($event, day)"
+        >
+            {{ day.getDate() }}
+        </button>
+        }
+    </div>
+    }
+</div>
