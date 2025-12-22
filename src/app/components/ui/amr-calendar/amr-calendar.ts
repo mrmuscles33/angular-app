@@ -17,6 +17,11 @@ import * as KeyboardUtils from '@app/utils/keyboard.utils';
 import { AmrButton } from '../amr-button/amr-button';
 import { AmrIcon } from '../amr-icon/amr-icon';
 
+export interface AmrCalendarEvent {
+    label: string;
+    date: Date;
+}
+
 @Component({
     selector: 'amr-calendar',
     templateUrl: './amr-calendar.html',
@@ -36,6 +41,7 @@ export class AmrCalendar {
     max = input<string>('31/12/2099');
     readonly = input<boolean>(false);
     cls = input<string>('');
+    events = input<AmrCalendarEvent[]>([]);
 
     // Model
     value = model<string>(DateUtils.dateToText(DateUtils.today(), this.format()));
@@ -63,6 +69,7 @@ export class AmrCalendar {
     });
 
     displayedDays = computed<Date[]>(() => {
+        if (this.showYear()) return [];
         const monthDate = DateUtils.textToDate(this.currentMonth(), DateUtils.DateFormats.M_Y);
         if (!monthDate) return [];
 
@@ -103,6 +110,7 @@ export class AmrCalendar {
     });
 
     displayedYears = computed<number[]>(() => {
+        if (!this.showYear()) return [];
         const years: number[] = [];
         for (let i = this.minDate().getFullYear(); i <= this.maxDate().getFullYear(); i++) {
             years.push(i);
@@ -137,17 +145,23 @@ export class AmrCalendar {
     constructor() {
         effect(() => {
             // Date à focus
-            const focused = this.displayedDays().some((day) => DateUtils.dateEquals(day, this.dateValue()))
-                ? this.dateValue()
-                : this.displayedDays()[0];
-            this.focusedDay.set(focused);
+            const focused =
+                this.displayedDays().find((day) => DateUtils.dateEquals(day, this.focusedDay())) ||
+                this.displayedDays().find((day) => DateUtils.dateEquals(day, this.dateValue())) ||
+                this.displayedDays()[0];
+            if (focused) {
+                this.focusedDay.set(focused);
+            }
         });
         effect(() => {
             // Année à focus
-            const focused = this.displayedYears().includes(this.dateValue().getFullYear())
-                ? this.dateValue().getFullYear()
-                : this.displayedYears()[0];
-            this.focusedYear.set(focused);
+            const focused =
+                this.displayedYears().find((year) => year === this.focusedYear()) ||
+                this.displayedYears().find((year) => year === this.dateValue().getFullYear()) ||
+                this.displayedYears()[0];
+            if (focused) {
+                this.focusedYear.set(focused);
+            }
         });
     }
 
@@ -160,9 +174,9 @@ export class AmrCalendar {
         afterNextRender(
             () => {
                 if (this.showYear()) {
-                    this.focusYear(this.dateValue().getFullYear());
+                    this.focusYear(this.focusedYear());
                 } else {
-                    this.focusDay(this.dateValue());
+                    this.focusDay(this.focusedDay());
                 }
             },
             { injector: this.injector }
@@ -216,8 +230,8 @@ export class AmrCalendar {
         const currentDate = DateUtils.textToDate(this.value(), this.format());
         if (currentDate) {
             currentDate.setFullYear(year);
-            const newValue = DateUtils.dateToText(currentDate, this.format());
-            this.value.set(newValue);
+            // const newValue = DateUtils.dateToText(currentDate, this.format());
+            // this.value.set(newValue);
             this.currentMonth.set(DateUtils.dateToText(currentDate, DateUtils.DateFormats.M_Y));
         }
 
@@ -328,5 +342,9 @@ export class AmrCalendar {
 
     dateToText(date: Date) {
         return DateUtils.dateToText(date, this.format());
+    }
+
+    getEvents(day: Date): AmrCalendarEvent[] {
+        return this.events().filter((event) => DateUtils.dateEquals(event.date, day));
     }
 }

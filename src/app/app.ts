@@ -10,7 +10,7 @@ import { AmrPassword } from './components/ui/amr-password/amr-password';
 import { AmrNumber } from './components/ui/amr-number/amr-number';
 import { AmrEmail } from './components/ui/amr-email/amr-email';
 import { AmrPhone } from './components/ui/amr-phone/amr-phone';
-import { AmrCalendar } from './components/ui/amr-calendar/amr-calendar';
+import { AmrCalendar, AmrCalendarEvent } from './components/ui/amr-calendar/amr-calendar';
 
 @Component({
     selector: 'app-root',
@@ -45,6 +45,15 @@ export class App {
     switch1 = signal(false);
     switch2 = signal(true);
     switch3 = signal(false);
+
+    // Calendar events
+    calendarEvents: AmrCalendarEvent[] = [
+        { label: 'Noël', date: new Date(2025, 11, 25) }, // 25 décembre 2024
+        { label: 'Réveillon', date: new Date(2025, 11, 31) }, // 31 décembre 2024
+        { label: "Jour de l'an", date: new Date(2026, 0, 1) }, // 1er janvier 2025
+        { label: 'Nouvelle année', date: new Date(2026, 0, 1) }, // 1er janvier 2025
+        { label: 'Tests', date: new Date(2026, 0, 1) }, // 1er janvier 2025
+    ];
 
     onPrimaryButtonClick() {
         alert('Clicked !');

@@ -56,11 +56,11 @@
         <!-- Jours du mois -->
         @for (day of displayedDays(); track day) {
         <button
-            class="calendar-day rounded-full w-full aspect-square select-none hover:bg-secondary-1 focus:bg-secondary-1"
+            class="calendar-day relative rounded-full w-full aspect-square select-none hover:bg-secondary-1 focus:bg-secondary-1"
             [class]="[
-                isDaySelected(day) ? 'border-2 border-primary-0 border-solid text-primary-0' : '',
-                isDayDisabled(day) ? 'cursor-not-allowed' : 'cursor-pointer'
-            ].join(' ')"
+                        isDaySelected(day) ? 'border-2 border-primary-0 border-solid text-primary-0' : '',
+                        isDayDisabled(day) ? 'cursor-not-allowed' : 'cursor-pointer'
+                    ].join(' ')"
             [class.bg-secondary-0]="isDayToday(day)"
             [class.text-secondary-4]="!isDayInCurrentMonth(day) || isDayDisabled(day)"
             [tabindex]="!readonly() && isDayFocused(day) ? 0 : -1"
@@ -69,7 +69,12 @@
             (click)="onClickDay($event, day)"
             (keydown)="onKeyDownDay($event, day)"
         >
-            {{ day.getDate() }}
+            <span>{{ day.getDate() }}</span>
+            <div class="calendar-day-events absolute bottom-1 w-full flex items-center justify-center gap-1">
+                @for(event of getEvents(day).slice(0, 3); track event) {
+                <span class="">•</span>
+                }
+            </div>
         </button>
         }
     </div>
