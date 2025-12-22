@@ -30,12 +30,12 @@
     <div class="calendar-years aspect-square grid grid-cols-3 grid-rows-7 items-center justify-items-center">
         @for (year of displayedYears(); track year) {
         <button
-            class="calendar-year rounded-full w-full h-full cursor-pointer select-none border-solid hover:bg-secondary-1"
-            [class.border-2]="isYearSelected(year)"
-            [class.text-primary-0]="isYearSelected(year)"
+            class="calendar-year rounded-full w-full h-full cursor-pointer select-none border-solid hover:bg-secondary-1 focus:bg-secondary-1"
+            [class]="isYearSelected(year) ? 'border-2 border-primary-0' : ''"
             [class.bg-secondary-0]="isYearToday(year)"
-            [class.selected]="isYearSelected(year)"
-            [tabindex]="!readonly() && isYearSelected(year) ? 0 : -1"
+            [tabindex]="!readonly() && isYearFocused(year) ? 0 : -1"
+            [attr.selected]="isYearSelected(year) ? true : null"
+            [value]="year"
             (click)="onClickYear(year)"
             (keydown)="onKeyDownYear($event, year)"
         >

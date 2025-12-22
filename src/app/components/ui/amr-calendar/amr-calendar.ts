@@ -1,13 +1,15 @@
 import {
+    afterNextRender,
     Component,
     computed,
     effect,
     ElementRef,
+    inject,
+    Injector,
     input,
     model,
     output,
     signal,
-    untracked,
     viewChild,
 } from '@angular/core';
 import * as DateUtils from '@app/utils/date.utils';
@@ -24,6 +26,7 @@ import { AmrIcon } from '../amr-icon/amr-icon';
     },
 })
 export class AmrCalendar {
+    readonly injector = inject(Injector);
     calendarMain = viewChild.required<ElementRef<HTMLElement>>('calendarMain');
 
     // Inputs
@@ -137,9 +140,14 @@ export class AmrCalendar {
             const focused = this.displayedDays().some((day) => DateUtils.dateEquals(day, this.dateValue()))
                 ? this.dateValue()
                 : this.displayedDays()[0];
-            untracked(() => {
-                this.focusedDay.set(focused);
-            });
+            this.focusedDay.set(focused);
+        });
+        effect(() => {
+            // Année à focus
+            const focused = this.displayedYears().includes(this.dateValue().getFullYear())
+                ? this.dateValue().getFullYear()
+                : this.displayedYears()[0];
+            this.focusedYear.set(focused);
         });
     }
 
@@ -149,6 +157,16 @@ export class AmrCalendar {
         // Trouver la page de l'année actuelle
         const page = Math.floor((this.dateValue().getFullYear() - this.minDate().getFullYear()) / 21);
         this.yearsPage.set(page);
+        afterNextRender(
+            () => {
+                if (this.showYear()) {
+                    this.focusYear(this.dateValue().getFullYear());
+                } else {
+                    this.focusDay(this.dateValue());
+                }
+            },
+            { injector: this.injector }
+        );
     }
 
     onClickPrevious(): void {
@@ -207,74 +225,73 @@ export class AmrCalendar {
     }
 
     onKeyDownDay(event: KeyboardEvent, day: Date): void {
+        if (!KeyboardUtils.isArrow(event)) return;
+
         let nextDate: Date | null = null;
-        if (KeyboardUtils.isArrow(event)) {
-            if (KeyboardUtils.isArrowRight(event)) {
-                nextDate = DateUtils.addDays(day, 1);
-            } else if (KeyboardUtils.isArrowLeft(event)) {
-                nextDate = DateUtils.addDays(day, -1);
-            } else if (KeyboardUtils.isArrowDown(event)) {
-                nextDate = DateUtils.addDays(day, 7);
-            } else if (KeyboardUtils.isArrowUp(event)) {
-                nextDate = DateUtils.addDays(day, -7);
-            }
-            if (nextDate && nextDate >= this.minDate() && nextDate <= this.maxDate()) {
-                // Changer de mois si nécessaire
-                const currentMonthDate = DateUtils.textToDate(this.currentMonth(), DateUtils.DateFormats.M_Y);
-                if (currentMonthDate && nextDate.getMonth() !== currentMonthDate.getMonth()) {
-                    this.currentMonth.set(DateUtils.dateToText(nextDate, DateUtils.DateFormats.M_Y));
-                    setTimeout(() => {
-                        this.focusedDay.set(nextDate!);
-                        this.calendarMain()
-                            ?.nativeElement?.querySelector<HTMLElement>(
-                                `.calendar-day[value="${this.dateToText(nextDate!)}"]`
-                            )
-                            ?.focus();
-                    }, 100);
-                } else {
-                    setTimeout(() => {
-                        this.focusedDay.set(nextDate!);
-                        this.calendarMain()
-                            ?.nativeElement?.querySelector<HTMLElement>(
-                                `.calendar-day[value="${this.dateToText(nextDate!)}"]`
-                            )
-                            ?.focus();
-                    }, 0);
-                }
-            }
-            KeyboardUtils.stopEvent(event);
+        if (KeyboardUtils.isArrowRight(event)) {
+            nextDate = DateUtils.addDays(day, 1);
+        } else if (KeyboardUtils.isArrowLeft(event)) {
+            nextDate = DateUtils.addDays(day, -1);
+        } else if (KeyboardUtils.isArrowDown(event)) {
+            nextDate = DateUtils.addDays(day, 7);
+        } else if (KeyboardUtils.isArrowUp(event)) {
+            nextDate = DateUtils.addDays(day, -7);
         }
+
+        // Si la date n'est pas valide, arrêter l'événement
+        if (!nextDate || nextDate < this.minDate() || nextDate > this.maxDate()) {
+            KeyboardUtils.stopEvent(event);
+            return;
+        }
+
+        // Mettre à jour le jour focusé
+        this.focusedDay.set(nextDate);
+
+        // Changer de mois si nécessaire
+        const currentMonthDate = DateUtils.textToDate(this.currentMonth(), DateUtils.DateFormats.M_Y);
+        if (currentMonthDate && nextDate.getMonth() !== currentMonthDate.getMonth()) {
+            this.currentMonth.set(DateUtils.dateToText(nextDate, DateUtils.DateFormats.M_Y));
+        }
+
+        // Attendre le prochain rendu pour focus
+        afterNextRender(this.focusDay.bind(this, nextDate), { injector: this.injector });
+        KeyboardUtils.stopEvent(event);
+    }
+
+    private focusDay(date: Date): void {
+        this.calendarMain()
+            ?.nativeElement?.querySelector<HTMLElement>(`.calendar-day[value="${this.dateToText(date)}"]`)
+            ?.focus();
     }
 
     onKeyDownYear(event: KeyboardEvent, year: number): void {
+        if (this.readonly() || !KeyboardUtils.isArrow(event)) return;
         let nextYear: number | null = null;
 
-        if (KeyboardUtils.isArrow(event)) {
-            if (KeyboardUtils.isArrowRight(event)) {
-                nextYear = year + 1;
-            } else if (KeyboardUtils.isArrowLeft(event)) {
-                nextYear = year - 1;
-            } else if (KeyboardUtils.isArrowDown(event)) {
-                nextYear = year + 3;
-            } else if (KeyboardUtils.isArrowUp(event)) {
-                nextYear = year - 3;
-            }
-
-            if (
-                nextYear !== null &&
-                nextYear >= this.minDate().getFullYear() &&
-                nextYear <= this.maxDate().getFullYear()
-            ) {
-                this.focusedYear.set(nextYear);
-                const page = Math.floor((nextYear - this.minDate().getFullYear()) / 21);
-                this.yearsPage.set(page);
-            }
-
-            KeyboardUtils.stopEvent(event);
-        } else if (KeyboardUtils.isEnter(event) || KeyboardUtils.isSpace(event)) {
-            this.onClickYear(year);
-            KeyboardUtils.stopEvent(event);
+        if (KeyboardUtils.isArrowRight(event)) {
+            nextYear = year + 1;
+        } else if (KeyboardUtils.isArrowLeft(event)) {
+            nextYear = year - 1;
+        } else if (KeyboardUtils.isArrowDown(event)) {
+            nextYear = year + 3;
+        } else if (KeyboardUtils.isArrowUp(event)) {
+            nextYear = year - 3;
         }
+
+        if (!nextYear || nextYear < this.minDate().getFullYear() || nextYear > this.maxDate().getFullYear()) {
+            KeyboardUtils.stopEvent(event);
+            return;
+        }
+
+        this.focusedYear.set(nextYear);
+        const page = Math.floor((nextYear - this.minDate().getFullYear()) / 21);
+        this.yearsPage.set(page);
+        afterNextRender(this.focusYear.bind(this, nextYear), { injector: this.injector });
+        KeyboardUtils.stopEvent(event);
+    }
+
+    private focusYear(year: number): void {
+        this.calendarMain()?.nativeElement?.querySelector<HTMLElement>(`.calendar-year[value="${year}"]`)?.focus();
     }
 
     isDayInCurrentMonth(day: Date): boolean {
@@ -303,6 +320,10 @@ export class AmrCalendar {
 
     isYearSelected(year: number): boolean {
         return year === this.dateValue().getFullYear();
+    }
+
+    isYearFocused(year: number): boolean {
+        return year === this.focusedYear();
     }
 
     dateToText(date: Date) {
